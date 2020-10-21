@@ -5,13 +5,14 @@
 
 
 import time
+import random
 import pygame as pg
 from scipy.spatial import distance
 pg.init()
 
 width = 800
 height = 600
-nSquares = 40
+nSquares = 20
 
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -133,10 +134,11 @@ class Bot():
         
 class Grid:
     
-    def __init__(self, width, height, nSquares):
+    def __init__(self, width, height, nSquares, factor):
         self.width = width
         self.height = height
         self.nSquares = nSquares
+        self.factor = factor
         self.squares = [[Empty() for y in range(int(height / (width / nSquares)))] for x in range(nSquares)]
         
         for x in range(len(self.squares)):
@@ -147,6 +149,7 @@ class Grid:
             self.squares[0][y] = Wall()
             self.squares[len(self.squares) - 1][y] = Wall()
             
+        self.place_walls()
         self.botLocations = []    
         self.margin = int(self.width / nSquares)    
         #self.arrowPosition = (1, 1) 
@@ -154,12 +157,19 @@ class Grid:
         self.squares[1][1] = Bot(self.botCount, self.margin, (1, 1))
         self.botLocations.append((1, 1))
         self.botCount += 1
-        self.goal = (6, 6)
+        self.goal = (18, 6)
         
         #self.arrow = pg.transform.scale(arrow, (self.margin, self.margin))
         #self.arrow = pg.transform.rotate(self.arrow, 90)
         #self.actions = {"left": False, "right": True, "up": False, "down": True}
         
+    def place_walls(self):    
+        for x in range(1, len(self.squares) - 1):
+            for y in range(1, len(self.squares[0]) - 1):
+                if random.randint(1, self.factor) == 1:
+                    self.squares[x][y] = Wall()
+                
+                
     def create_rect(self, x, y):
         w = (x * self.margin) + 2
         h = (y * self.margin) + 2
@@ -336,8 +346,10 @@ class Grid:
         #print(keys[values.index(min(values))])
             
         return keys[values.index(min(values))]
+    
+factor = 4
             
-grid = Grid(width, height, nSquares)
+grid = Grid(width, height, nSquares, factor)
 
 pg.display.set_caption('Coordinated Multi-Robot Exploration')
 
@@ -412,6 +424,19 @@ quit()
 
 
 # In[3]:
+
+
+import random
+print(random.randint(1, 2))
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
 
 
 
